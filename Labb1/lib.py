@@ -1,5 +1,3 @@
-import csv
-
 class Drama:
 
     def __init__(self, name, rating, actors,

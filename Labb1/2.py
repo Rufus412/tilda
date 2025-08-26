@@ -1,5 +1,5 @@
 from lib import *
-
+import csv
 drama1 = Drama("k1", 12, ["peter", "oskar"],
                12, "kdrama", "peter",
                "oskar", 2012, 12, "kanal 12")

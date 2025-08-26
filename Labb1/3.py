@@ -1,5 +1,5 @@
 from lib import *
-
+import csv
 dramas = []
 
 def read_file(filename):
