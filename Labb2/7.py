@@ -1,6 +1,6 @@
 from linkedQFile import LinkedQ
 
-kortLista = [int(x) for x in input("Vilken ordning ligger korten i?").split(" ")]
+kortLista = [x for x in input().split(" ")]
 
 kortlek = LinkedQ()
 
@@ -15,4 +15,4 @@ while not kortlek.isEmpty():
 
 
 
-print(f"de kommer ut i denna ordning {''.join(f'{x} ' for x in result) }"  )
+print(f"{''.join(f'{x} ' for x in result) }".strip())
