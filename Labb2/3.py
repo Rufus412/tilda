@@ -1,4 +1,4 @@
-from Labb2.arrayQFile import *
+from arrayQFile import *
 
 
 
