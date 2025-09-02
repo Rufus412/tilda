@@ -40,6 +40,15 @@ class Bintree:
     def __init__(self):
         self.root = None
 
+    def __contains__(self, item) -> bool:
+        if self.root:
+            return self.check(self.root, str(item))
+        else:
+            return False
+
+    def __iter__(self):
+        return self._transform_to_list()
+
     def insert(self, node, new_node):
 
         if node != new_node:
@@ -78,9 +87,6 @@ class Bintree:
         else:
             return True
 
-    def __contains__(self, item) -> bool:
-        return self.check(self.root, str(item))
-
     def search_and_write(self, node: Node):
 
         if node.left:
@@ -94,3 +100,17 @@ class Bintree:
     def write(self):
         self.search_and_write(self.root)
         print("\n")
+
+    def _search_and_transform(self, node: Node, result_list):
+        if node.left:
+            self._search_and_transform(node.left, result_list)
+
+        result_list.append(node)
+
+        if node.right:
+            self._search_and_transform(node.right, result_list)
+
+    def _transform_to_list(self):
+        result_list = []
+        self._search_and_transform(self.root, result_list)
+        return iter(result_list)
