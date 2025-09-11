@@ -1,8 +1,11 @@
 from bintreeFile import *
 from linkedQFile import *
 
+# Alfabet för att iterera genom bokstäver senare i sök-algoritmen
 alphabet = "abcdefghijklmnopqrstuvwxyzåäö"
 
+
+# Trädobjekt för att lagra data om vilka ord vi ska kolla och har kollat
 svenska = Bintree()
 gamla = Bintree()
 with open('word3.txt') as file:
@@ -12,47 +15,73 @@ with open('word3.txt') as file:
 
 def makechildren(starting_word, q):
     """
-    skapar barn till noderna
+    Söker genom en nod och skapar barn till noden.
+
+    Istället för retur manipulerar det objektet q
+    return: none
     """
 
+    # Lägger in ordet vi utgår från så att vi vet att vi hanterat det.
     gamla.put(starting_word)
 
-    print(starting_word)
 
+    # Itererar och ändrar varje bokstav i ordet för att söka efter barn.
     for i in range(len(starting_word)):
-        word = list(starting_word)
-        for letter2 in alphabet.replace(word[i], ""):
-            word[i] = letter2
 
+        # Kopia av ordet
+        word = list(starting_word)
+
+        # BYter ut bokstaven på index i mot en annan bokstav
+        for letter in alphabet.replace(word[i], ""):
+
+            # Nu byter vi
+            word[i] = letter
+
+            # Nedan återskapar vi det nya ordet
             word_str = ""
             for l in word:
                 word_str += l
 
-
+            # Om ordet råkar vara det sökta slutordet är hela algoritmen klar
             if word_str == slutord:
+                # Annonserar att det finns en väg
                 print("Det finns en väg till", slutord)
+
+                # Tömer kön så att ovanför i algoritmen bryts
                 while not q.isEmpty():
                     q.dequeue()
+
+                # Sätter in det sökta ordet så att vi vet att vi hittat det
                 gamla.put(word_str)
                 return
 
+            # Om det nya ordet finns i svenska sparar vi det som ett barn
             if word_str in svenska:
+
+                # Kollar om det inte är ett dumbarn
                 if word_str not in gamla:
+
+                    # Lägger in ordet i både kön och gamla ord.
                     q.enqueue(word_str)
                     gamla.put(word_str)
 
+
+# Kön som tillfälligt lagrar alla ord vi vill iterera genom
 q = LinkedQ()
 
+# Ber om input från användaren, start och slut
 startord = input("startord: ")
 slutord = input("slutord: ")
 
+# Lägger in startordet, så att vi sedan har den att utgå ifrån
 q.enqueue(startord)
 
+
+# Breddenförstsökning
 while not q.isEmpty():
     word = q.dequeue()
     makechildren(word, q)
 
+# När loopen är klar kollar vi om vi misslyckats hitta
 if not slutord in gamla:
     print("Det finns ingen väg till ", slutord)
-
-gamla.write()
