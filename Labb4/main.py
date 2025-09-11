@@ -77,10 +77,13 @@ slutord = input("slutord: ")
 q.enqueue(startord)
 
 
-# Breddenförstsökning
-while not q.isEmpty():
-    word = q.dequeue()
-    makechildren(word, q)
+# Kollar om slutordet finns i listan
+if slutord in svenska:
+
+    # Breddenförstsökning
+    while not q.isEmpty():
+        word = q.dequeue()
+        makechildren(word, q)
 
 # När loopen är klar kollar vi om vi misslyckats hitta
 if not slutord in gamla:
