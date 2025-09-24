@@ -56,10 +56,7 @@ def makechildren(parent, q):
 
                 last_node = q.dequeue()
 
-                temp_node = last_node
-                while(temp_node != None):
-                    print(temp_node.value)
-                    temp_node = temp_node.parent
+                writechain(last_node)
 
                 # Sätter in det sökta ordet så att vi vet att vi hittat det
                 gamla.put(word_str)
@@ -75,6 +72,10 @@ def makechildren(parent, q):
                     q.enqueue(Node(parent, word_str))
                     gamla.put(word_str)
 
+def writechain(node):
+    if not node == None:
+        writechain(node.parent)
+        print(node.value)
 
 # Kön som tillfälligt lagrar alla ord vi vill iterera genom
 q = LinkedNodeQ()
