@@ -29,6 +29,5 @@ print(d.search("a"))
 d.store("b", 2)
 print(d.search("b"))
 print(d.search("The Heirs"))
-
 print(h.search("The Heirs-"))
 print(h.search("zz"))

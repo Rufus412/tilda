@@ -47,4 +47,4 @@ class Hashtable:
         for char in str(key):
             _hash = (_hash * 11 + ord(char)) % self.size
 
-        return _hash    
+        return _hash
