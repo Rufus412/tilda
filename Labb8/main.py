@@ -37,6 +37,9 @@ def is_molecule(input_str):
         while not q.isEmpty():
             print(q.dequeue(), end = "")
         print()
+        return False
+
+    return True
 
 
 def is_atom(q):
@@ -48,7 +51,7 @@ def is_atom(q):
         next = q.peek()
 
         if next == None:
-            return
+            return True
 
         if is_lowercase_letter(next):
             q.dequeue()
@@ -59,28 +62,27 @@ def is_atom(q):
                 raise Syntaxfel("Felaktig karaktär efter stor bokstav")
     else:
         raise Syntaxfel(f"Saknad stor bokstav vid radslutet")
+    return True
 
 def is_uppercase_letter(char):
-    if char in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
-        return True
+    return char in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 def is_lowercase_letter(char):
-    if char in "abcdefghijklmnopqrstuvwxyz":
-        return True
+    return char in "abcdefghijklmnopqrstuvwxyz"
 
 def is_num(parsed_str):
     try:
         if int(parsed_str) > 1:
-            return
+            return True
         else:
             raise Syntaxfel("För litet tal vid radslutet")
     except ValueError:
         raise Syntaxfel("Är inte int")
 
-
-while True:
-    input_str = input()
-    if input_str == "#":
-        break
-    else:
-        is_molecule(input_str)
+if __name__=='__main__':
+    while True:
+        input_str = input()
+        if input_str == "#":
+            break
+        else:
+            is_molecule(input_str)
