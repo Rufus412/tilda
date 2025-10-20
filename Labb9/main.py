@@ -47,8 +47,15 @@ def is_molecule(q, p_stack):
 
     is_group(q, p_stack)
 
+    next = q.peek()
+
     if not q.isEmpty():
         is_molecule(q, p_stack)
+
+    if len(p_stack) == 0:
+        return True
+    else:
+        raise Syntaxfel("Saknad högerparentes vid radslutet")
 
 
 def is_group(q, p_stack):
@@ -58,21 +65,28 @@ def is_group(q, p_stack):
     if next == None:
         return True
 
-    if next in "()":
-        if next == "(":
-            p_stack.append("(")
-        elif p_stack[-1] == "(":
-            p_stack.pop()
+    if next == "(":
+
+        p_stack.append("(")
 
         q.dequeue()
         is_molecule(q, p_stack)
 
+        next = q.peek()
+
+
         is_num_or_empty(q)
+
+
+    elif next == ")" and len(p_stack) == 0:
+        raise Syntaxfel("Felaktig gruppstart vid radslutet")
 
     else:
         is_atom(q, p_stack)
 
         is_num_or_empty(q)
+
+
 
     return True
 
@@ -91,10 +105,25 @@ def is_atom(q, p_stack):
             chars += next
             q.dequeue()
         return is_in_Atoms(chars)
-    elif chars == ")" and p_stack[-1] == "(":
+
+    elif chars == ")":
+        if not len(p_stack) == 0:
+            p_stack.pop()
+            q.dequeue()
+
+            next = q.peek()
+
+            if not next or not next in "0123456789":
+                raise Syntaxfel("Saknad siffra vid radslutet")
+
         return True
-    else:
+
+    elif is_lowercase_letter(chars):
         raise Syntaxfel("Saknad stor bokstav vid radslutet")
+
+    else:
+        raise Syntaxfel("Felaktig gruppstart vid radslutet")
+
 
 def is_in_Atoms(chars):
     if chars in Atoms:
