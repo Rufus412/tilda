@@ -103,22 +103,11 @@ def is_s_group(q):
 def is_group(q):
 
     next = q.peek()
-
-    if next == None:
-        return True
-
     if next == "(":
-
         q.dequeue()
         handle_parnethesis(q)
-
-
-    #elif next == ")":
-    #    raise Syntaxfel("Felaktig gruppstart vid radslutet")
-
     else:
         is_atom(q)
-
         is_num_or_empty(q)
 
 
