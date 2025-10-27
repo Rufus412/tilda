@@ -18,7 +18,6 @@ class Syntaxfel(Exception):
 
 def start(input_str):
 
-
     try:
 
         q = LinkedQ()
@@ -42,15 +41,11 @@ def start(input_str):
 def is_molecule(q):
 
     is_group(q)
-
-    next = q.peek()
-
     if not q.isEmpty():
         is_molecule(q)
 
 def handle_parnethesis(q):
-    is_atom(q)
-    is_num_or_empty(q)
+    #is_s_group(q)
     while True:
         next = q.peek()
         if next == None:
@@ -78,10 +73,10 @@ def is_num(q):
     next = q.peek()
     if next == None:
         raise Syntaxfel("Saknad siffra vid radslutet")
-    if next == "0" or next == "1":
+    if next == "0":
         q.dequeue()
         raise Syntaxfel("För litet tal vid radslutet")
-    elif next in "23456789":
+    elif next in "123456789":
         parsed_string = ""
         while not q.isEmpty():
             next = q.peek()
@@ -91,6 +86,8 @@ def is_num(q):
                 q.dequeue()
             except:
                 break
+        if parsed_string == "1":
+            raise Syntaxfel("För litet tal vid radslutet")
         return True
     return False
 
@@ -103,22 +100,13 @@ def is_s_group(q):
 def is_group(q):
 
     next = q.peek()
-
     if next == None:
-        return True
-
+        raise Syntaxfel
     if next == "(":
-
         q.dequeue()
         handle_parnethesis(q)
-
-
-    #elif next == ")":
-    #    raise Syntaxfel("Felaktig gruppstart vid radslutet")
-
     else:
         is_atom(q)
-
         is_num_or_empty(q)
 
 
@@ -188,4 +176,4 @@ if __name__=='__main__':
         if input_str == "#":
             break
         else:
-            start(input_str)
+            start(input_str.strip())
