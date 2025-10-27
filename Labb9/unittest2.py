@@ -6,7 +6,7 @@ class TestMoleculeMethods(unittest.TestCase):
     def test_prompts_and_answers(self):
 
         def start_test(input_str):
-
+            print(f"Testing input: {input_str}")
             try:
 
                 q = LinkedQ()

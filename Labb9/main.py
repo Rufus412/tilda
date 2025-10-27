@@ -17,16 +17,11 @@ class Syntaxfel(Exception):
         super().__init__(self.message)
 
 def start(input_str):
-
     try:
-
         q = LinkedQ()
-
         for char in input_str:
             q.enqueue(char)
-
         is_formula(q)
-
         print("Formeln är syntaktiskt korrekt")
 
     except Syntaxfel as exception:
@@ -46,36 +41,21 @@ def is_formula(q):
 
 def is_molecule(q):
     is_group(q)
-    if not q.isEmpty():
+    if not q.isEmpty() and q.peek() != ")":
         is_molecule(q)
 
 
-
-
-def handle_parnethesis(q):
-    #is_s_group(q)
-    while True:
-        next = q.peek()
-        if next == None:
-            raise Syntaxfel("Saknad högerparentes vid radslutet")
-        if next not in "()":
-            is_s_group(q)
-        else:
-            break
+def is_group(q):
     next = q.peek()
     if next == "(":
         q.dequeue()
-        handle_parnethesis(q)
-    next = q.peek()
-    if next ==")":
-        q.dequeue()
-        if not is_num(q):
-            raise Syntaxfel("Saknad siffra vid radslutet")
-        return
-    elif next == None:
-        raise Syntaxfel("Saknad högerparentes vid radslutet")
+        is_molecule(q)
+        if q.peek() == ")":
+            q.dequeue()
+            if not is_num(q):
+                raise Syntaxfel("Saknad siffra vid radslutet")
     else:
-        raise Syntaxfel("Saknad högerparentes vid radslutet")
+        is_s_group(q)
 
 def is_num(q):
     next = q.peek()
