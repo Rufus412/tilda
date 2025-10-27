@@ -1,6 +1,3 @@
-from os import WCONTINUED
-from traceback import print_stack
-
 from linkedQFile import *
 
 Atoms_string = ("""H   He  Li  Be  B   C   N   O   F   Ne  Na  Mg  Al  Si  P   S   Cl  Ar  K   Ca  Sc  Ti  V  
@@ -21,7 +18,6 @@ class Syntaxfel(Exception):
 
 def start(input_str):
 
-    p_stack = []
 
     try:
 
@@ -30,7 +26,7 @@ def start(input_str):
         for char in input_str:
             q.enqueue(char)
 
-        is_molecule(q, p_stack)
+        is_molecule(q)
 
         print("Formeln är syntaktiskt korrekt")
 
@@ -43,22 +39,68 @@ def start(input_str):
 
     return True
 
-def is_molecule(q, p_stack):
+def is_molecule(q):
 
-    is_group(q, p_stack)
+    is_group(q)
 
     next = q.peek()
 
     if not q.isEmpty():
-        is_molecule(q, p_stack)
+        is_molecule(q)
 
-    if len(p_stack) == 0:
-        return True
+def handle_parnethesis(q):
+    is_atom(q)
+    is_num_or_empty(q)
+    while True:
+        next = q.peek()
+        if next == None:
+            raise Syntaxfel("Saknad högerparentes vid radslutet")
+        if next not in "()":
+            is_s_group(q)
+        else:
+            break
+    next = q.peek()
+    if next == "(":
+        q.dequeue()
+        handle_parnethesis(q)
+    next = q.peek()
+    if next ==")":
+        q.dequeue()
+        if not is_num(q):
+            raise Syntaxfel("Saknad siffra vid radslutet")
+        return
+    elif next == None:
+        raise Syntaxfel("Saknad högerparentes vid radslutet")
     else:
         raise Syntaxfel("Saknad högerparentes vid radslutet")
 
+def is_num(q):
+    next = q.peek()
+    if next == None:
+        raise Syntaxfel("Saknad siffra vid radslutet")
+    if next == "0" or next == "1":
+        q.dequeue()
+        raise Syntaxfel("För litet tal vid radslutet")
+    elif next in "23456789":
+        parsed_string = ""
+        while not q.isEmpty():
+            next = q.peek()
+            try:
+                int(next)
+                parsed_string += next
+                q.dequeue()
+            except:
+                break
+        return True
+    return False
 
-def is_group(q, p_stack):
+
+def is_s_group(q):
+    is_atom(q)
+    is_num_or_empty(q)
+
+
+def is_group(q):
 
     next = q.peek()
 
@@ -67,22 +109,15 @@ def is_group(q, p_stack):
 
     if next == "(":
 
-        p_stack.append("(")
-
         q.dequeue()
-        is_molecule(q, p_stack)
-
-        next = q.peek()
+        handle_parnethesis(q)
 
 
-        is_num_or_empty(q)
-
-
-    elif next == ")" and len(p_stack) == 0:
-        raise Syntaxfel("Felaktig gruppstart vid radslutet")
+    #elif next == ")":
+    #    raise Syntaxfel("Felaktig gruppstart vid radslutet")
 
     else:
-        is_atom(q, p_stack)
+        is_atom(q)
 
         is_num_or_empty(q)
 
@@ -90,7 +125,7 @@ def is_group(q, p_stack):
 
     return True
 
-def is_atom(q, p_stack):
+def is_atom(q):
 
     chars = q.peek()
 
@@ -105,18 +140,6 @@ def is_atom(q, p_stack):
             chars += next
             q.dequeue()
         return is_in_Atoms(chars)
-
-    elif chars == ")":
-        if not len(p_stack) == 0:
-            p_stack.pop()
-            q.dequeue()
-
-            next = q.peek()
-
-            if not next or not next in "0123456789":
-                raise Syntaxfel("Saknad siffra vid radslutet")
-
-        return True
 
     elif is_lowercase_letter(chars):
         raise Syntaxfel("Saknad stor bokstav vid radslutet")

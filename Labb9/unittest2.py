@@ -7,8 +7,6 @@ class TestMoleculeMethods(unittest.TestCase):
 
         def start_test(input_str):
 
-            p_stack = []
-
             try:
 
                 q = LinkedQ()
@@ -16,7 +14,7 @@ class TestMoleculeMethods(unittest.TestCase):
                 for char in input_str:
                     q.enqueue(char)
 
-                is_molecule(q, p_stack)
+                is_molecule(q)
 
                 return_str = "Formeln är syntaktiskt korrekt"
 
@@ -41,7 +39,27 @@ class TestMoleculeMethods(unittest.TestCase):
             ["a", "Saknad stor bokstav vid radslutet a"],
             ["(Cl)2)3", "Felaktig gruppstart vid radslutet )3"],
             [")", "Felaktig gruppstart vid radslutet )"],
-            ["2", "Felaktig gruppstart vid radslutet 2"]
+            ["2", "Felaktig gruppstart vid radslutet 2"],
+            ["Na", "Formeln är syntaktiskt korrekt"],                   # single atom
+            ["H2O", "Formeln är syntaktiskt korrekt"],                  # simple molecule
+            ["Si(C3(COOH)2)4(H2O)7", "Formeln är syntaktiskt korrekt"], # complex nested
+            ["(H)2", "Formeln är syntaktiskt korrekt"],                 # minimal parentheses with number
+            ["(H)", "Saknad siffra vid radslutet"],                     # missing number after parenthesis
+            ["(H2(O2)3)4", "Formeln är syntaktiskt korrekt"],           # nested parentheses
+            ["()", "Felaktig gruppstart vid radslutet )"],                           # empty parentheses
+            ["H2(O2", "Saknad högerparentes vid radslutet"],             # missing closing parenthesis
+            ["(H2)1", "För litet tal vid radslutet"],                   # number 1 not allowed
+            ["Na332", "Formeln är syntaktiskt korrekt"],                # large number
+            ["C12H22O11", "Formeln är syntaktiskt korrekt"],            # multi-digit numbers
+            ["C(H2O)2(OH)3", "Formeln är syntaktiskt korrekt"],         # multiple groups with parentheses
+            ["(Na(Cl)2)3", "Formeln är syntaktiskt korrekt"],           # nested parentheses with numbers
+            ["H2O2", "Formeln är syntaktiskt korrekt"],                 # peroxide molecule
+            ["H2O2O", "Formeln är syntaktiskt korrekt"],                # molecule ending with atom
+            ["(H2O)2Fe3", "Formeln är syntaktiskt korrekt"],            # multiple groups
+            ["C(H)2(O)2N", "Formeln är syntaktiskt korrekt"],           # mixed single atoms and groups
+            ["(H2(O)2)2", "Formeln är syntaktiskt korrekt"],            # nested with multiple digits
+            ["(Xx)2", "Okänd atom vid radslutet )2"],                   # unknown atom in parentheses
+
         ]
 
         for p_and_a in prompts_and_answers:
