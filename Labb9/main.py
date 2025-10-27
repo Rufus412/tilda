@@ -25,7 +25,7 @@ def start(input_str):
         for char in input_str:
             q.enqueue(char)
 
-        is_molecule(q)
+        is_formula(q)
 
         print("Formeln är syntaktiskt korrekt")
 
@@ -38,11 +38,19 @@ def start(input_str):
 
     return True
 
-def is_molecule(q):
+def is_formula(q):
+    is_molecule(q)
+    if not q.isEmpty():
+        raise Syntaxfel("Felaktig gruppstart vid radslutet")
 
+
+def is_molecule(q):
     is_group(q)
     if not q.isEmpty():
         is_molecule(q)
+
+
+
 
 def handle_parnethesis(q):
     #is_s_group(q)
@@ -97,21 +105,6 @@ def is_s_group(q):
     is_num_or_empty(q)
 
 
-def is_group(q):
-
-    next = q.peek()
-    if next == None:
-        raise Syntaxfel
-    if next == "(":
-        q.dequeue()
-        handle_parnethesis(q)
-    else:
-        is_atom(q)
-        is_num_or_empty(q)
-
-
-
-    return True
 
 def is_atom(q):
 
